@@ -1,50 +1,53 @@
-#include <stdio.h>
-#include <time.h>
-
 #include "apg.h"
 #include "pronpass.h"
 #include "rnd.h"
 #include "restrict.h"
 
-#define S_NB    0x01 /* Numeric */
-#define S_SS    0x02 /* Special */
-#define S_CL    0x04 /* Capital */
-#define S_SL    0x08 /* Small   */
-
-APGPassword * 
-apg_password(APGPasswordProps *props, APGMode *mode)
+APGObject*
+apg_init()
 {
+    APGObject obj;
+    return &obj;
+}
+
+boolean
+apg_destroy(APGObject *obj)
+{
+    //pass for now
+}
+
+void
+apg_password(APGObject *obj)
+{
+    APGPassword *apgpasswd = &obj->apgpasswd;
+    APGPasswordProps *props = &obj->props;
+    APGMode *mode = &obj->mode;
+
+    do {
+        gen_pron_pass(apgpasswd->password, apgpasswd->phonetic, 5, 10, S_NB|S_SS|S_CL);
+    } while(filter_check_pass(apgpasswd->password, S_NB|S_SS|S_CL));
 }
 
 void
 test_apg() {
-    APGPassword* apgpasswd;
-    //char * pstr;
-    //char * pho;  
-    //time_t t;
+    APGPassword _apgpasswd;
+    APGPassword *apgpasswd = &_apgpasswd;
+    time_t t;
     int filter_check_result = 0;
+    int count = 0;
 
-    //t = time(NULL);
-    //x917_setseed((UINT32)time(NULL), FALSE);
-    apgpasswd->password = (char *)calloc(1, (size_t)(10+1));
-    apgpasswd->phonetic = (char *)calloc(1, (size_t)(10*18));
-    //apgpasswd->password = calloc(max_len, sizeof(char *));
-    //apgpasswd->phonetic = calloc(max_len, sizeof( (char *) * 18));
+    t = time(NULL);
+    x917_setseed((UINT32)time(NULL), FALSE);
+    apgpasswd->password = calloc(1, (size_t)(10+1));
+    apgpasswd->phonetic = calloc(1, (size_t)(10*18));
 
     do {
-    
-
-        printf("password creation\n");
-        //gen_pron_pass(apgpasswd->password, apgpasswd->phonetic, 5, 10, S_NB|S_SS|S_CL);
-        //printf("passwd is %s phonetic  %s\n\n", apgpasswd->password, apgpasswd->phonetic);
-        //filter_check_result = filter_check_pass(apgpasswd->password, S_NB|S_SS|S_CL);
-        //printf("filter %i\n", filter_check_result);
-
-        //free((void*)apgpasswd->password);
-        //free((void*)apgpasswd->phonetic);
-        filter_check_result++;
-
-    } while(filter_check_result < 4);
+        count++;
+        gen_pron_pass(apgpasswd->password, apgpasswd->phonetic, 5, 10, S_NB|S_SS|S_CL);
+        printf("%s\n", apgpasswd->password);
+        filter_check_result = filter_check_pass(apgpasswd->password, S_NB|S_SS|S_CL);
+    } while(filter_check_result);
+    printf("took %i tries", count);
     
 }
 

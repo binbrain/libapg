@@ -13,7 +13,7 @@
 **       documentation and/or other materials provided with the distribution. 
 **     3.The name of the author may not be used to endorse or promote products
 **       derived from this software without specific prior written permission. 
-** 		  
+**        
 ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR  ``AS IS'' AND ANY EXPRESS
 ** OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE IMPLIED
 ** WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -31,14 +31,10 @@
 ** restrict.h
 */
 #ifndef APG_RESTRICT_H
-#define APG_RESTRICT_H	1
+#define APG_RESTRICT_H  1
 
-#include "bloom.h"
-#include "randpass.h"
-#define MAX_DICT_STRING_SIZE	255
+#define MAX_DICT_STRING_SIZE    255
 int check_pass(char * pass, char *dict);
-int bloom_check_pass (char *word, char *filter);
-int paranoid_bloom_check_pass (char * password, char *filter, USHORT s_len);
 int filter_check_pass(const char * word, unsigned int cond);
 int set_exclude_list(const char * char_string);
 

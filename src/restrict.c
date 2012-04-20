@@ -13,7 +13,7 @@
 **       documentation and/or other materials provided with the distribution. 
 **     3.The name of the author may not be used to endorse or promote products
 **       derived from this software without specific prior written permission. 
-** 		  
+**        
 ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR  ``AS IS'' AND ANY EXPRESS
 ** OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE IMPLIED
 ** WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,8 +33,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "glyph.h"
 #include "restrict.h"
-extern struct sym smbl[94];
+
 /*
 ** check_pass() - routine that checks if password exist in dictionary
 ** INPUT:
@@ -92,99 +94,6 @@ check_pass(char *pass, char *dict)
 }
 
 /*
-** bloom_check_pass() - routine that checks if password exist in dictionary
-** using Bloom filter.
-** INPUT:
-**   char * - password to check.
-**   char * - bloom-filter filename.
-** OUTPUT:
-**   int
-**    -1 - error 
-**     1 - password exist in dictionary
-**     0 - password does not exist in dictionary
-** NOTES:
-**   none.
-*/
-int
-bloom_check_pass (char *word, char *filter)
-{
- int ret = 0;
- FILE *f_filter;
- h_val filter_size = 0L;
- f_mode flt_mode = 0x00;
- if ( (f_filter = open_filter(filter,"r")) == NULL)
-    return(-1);
- filter_size = get_filtersize(f_filter);
- flt_mode =    get_filtermode(f_filter);
- ret = check_word (word, f_filter, filter_size, flt_mode);
- close_filter(f_filter);
- return(ret);
-}
-
-/*
-** paranoid_bloom_check_pass() - routine that checks if password or any
-** substring of the password exist in dictionary using Bloom filter.
-** INPUT:
-**   char * - password to check.
-**   char * - bloom-filter filename.
-**   USHORT - minimum substring length
-** OUTPUT:
-**   int
-**    -1 - error 
-**     1 - password exist in dictionary
-**     0 - password does not exist in dictionary
-** NOTES:
-**   none.
-*/
-int
-paranoid_bloom_check_pass (char * password, char *filter, USHORT s_len)
-{
- char * substring;
- int len = strlen(password); /* string length                      */
- int c_substr_start_pos = 0; /* current start position             */
- int substr_len = 0;         /* substring length (LEN-I >= substr_len >= 2) */
- int k = 0;                  /* counter                            */
- int c = 0;                  /* counter                            */
- int ret = 0;
- if (s_len < 2) s_len = 2;
- if (s_len > len) return (bloom_check_pass(password, filter));
-
-#ifdef APG_DEBUG
- fprintf (stdout, "DEBUG> paranoid_bloom_check_pass: ck pass: %s\n", password);
- fflush (stdout);
-#endif /* APG_DEBUG */
-
- if ((substring = (char *)calloc(1, (size_t)len))==NULL)
-   return (-1);
- 
- for (c_substr_start_pos = 0; c_substr_start_pos <= len-s_len; c_substr_start_pos++)
-  for (substr_len = s_len; substr_len <= len-c_substr_start_pos; substr_len++)
-   {
-    c = 0;
-    for (k = c_substr_start_pos; k <= c_substr_start_pos + substr_len-1; k++)
-     {
-      substring[c]=password[k];
-      c++;
-     }
-#ifdef APG_DEBUG
-    fprintf (stdout, "DEBUG> paranoid_bloom_check_pass: ck substr: %s\n", substring);
-    fflush (stdout);
-#endif /* APG_DEBUG */
-    if((ret = bloom_check_pass(substring, filter)) == 1)
-    {
-#ifdef APG_DEBUG
-     fprintf (stdout, "DEBUG> paranoid_bloom_check_pass: substr found in filter: %s\n", substring);
-     fflush (stdout);
-#endif /* APG_DEBUG */
-     return(1);
-    }
-    else if (ret == -1) return(-1);
-    (void)memset(substring,0,(size_t)len);
-   }
- return(0);
-}
-
-/*
 ** filter_check_pass() - routine that checks password against filter string
 **
 ** INPUT:
@@ -217,25 +126,25 @@ filter_check_pass(const char * word, unsigned int cond)
     for (i=0; i < 94; i++)
        if ((smbl[i].type & S_SS) > 0)
           if ((strchr(word,smbl[i].ch)) != NULL)
-	     ss_ret = 1;
+         ss_ret = 1;
  i = 0;
  if ((cond & S_SL) > 0)
     for (i=0; i < 94; i++)
        if ((smbl[i].type & S_SL) > 0)
           if ((strchr(word,smbl[i].ch)) != NULL)
-	     sl_ret = 1;
+         sl_ret = 1;
  i = 0;
  if ((cond & S_CL) > 0)
     for (i=0; i < 94; i++)
        if ((smbl[i].type & S_CL) > 0)
           if ((strchr(word,smbl[i].ch)) != NULL)
-	     cl_ret = 1;
+         cl_ret = 1;
  i = 0;
  if ((cond & S_NB) > 0)
     for (i=0; i < 94; i++)
        if ((smbl[i].type & S_NB) > 0)
           if ((strchr(word,smbl[i].ch)) != NULL)
-	     nb_ret = 1;
+         nb_ret = 1;
  if (((cond & S_SS) > 0) &&(ss_ret != 1)) return (1);
  if (((cond & S_SL) > 0) &&(sl_ret != 1)) return (1);
  if (((cond & S_CL) > 0) &&(cl_ret != 1)) return (1);

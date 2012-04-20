@@ -19,7 +19,7 @@
 **       documentation and/or other materials provided with the distribution. 
 **     3.The name of the author may not be used to endorse or promote products
 **       derived from this software without specific prior written permission. 
-** 		  
+**        
 ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR  ``AS IS'' AND ANY EXPRESS
 ** OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE IMPLIED
 ** WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,7 +35,7 @@
 
 
 #ifndef APG_PRONPASS_H
-#define APG_PRONPASS_H	1
+#define APG_PRONPASS_H  1
 
 #ifndef APG_OWN_TYPES_H
 #include "owntypes.h"
@@ -67,18 +67,28 @@
 #define NOT_END               01
 #define ANY_COMBINATION       0
 
-extern int gen_pron_pass (char *word, char *hyphenated_word, USHORT minlen,
-               USHORT maxlen, unsigned int pass_mode);
-
+extern 
+int     gen_pron_pass (char *word
+                      ,char *hyphenated_word
+                      ,USHORT minlen
+                      ,USHORT maxlen
+                      ,unsigned int pass_mode
+                      );
 USHORT  random_unit (USHORT type);
 USHORT  get_random (USHORT minlen, USHORT maxlen);
 boolean have_initial_y (USHORT *units, USHORT unit_size);
 boolean illegal_placement (USHORT *units, USHORT pwlen);
 boolean improper_word (USHORT *units, USHORT word_size);
 boolean have_final_split (USHORT *units, USHORT unit_size);
-int gen_word (char *word, char *hyphenated_word, USHORT pwlen,
-              unsigned int pass_mode);
-char   	*gen_syllable(char *syllable, USHORT pwlen, USHORT *units_in_syllable,
-                      USHORT *syllable_length);
+int     gen_word (char *word
+                 ,char *hyphenated_word
+                 ,USHORT pwlen
+                 ,unsigned int pass_mode
+                 );
+char    *gen_syllable(char *syllable
+                     ,USHORT pwlen
+                     ,USHORT *units_in_syllable
+                     ,USHORT *syllable_length
+                     );
 
 #endif /* APG_PRONPASS_H */

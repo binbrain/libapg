@@ -13,7 +13,7 @@
 **       documentation and/or other materials provided with the distribution. 
 **     3.The name of the author may not be used to endorse or promote products
 **       derived from this software without specific prior written permission. 
-** 		  
+**        
 ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR  ``AS IS'' AND ANY EXPRESS
 ** OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE IMPLIED
 ** WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -26,9 +26,19 @@
 ** NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef APG_SMBL_H
-#define APG_SMBL_H    1
-struct sym smbl[94] = 
+
+#ifndef APG_GLYPH_H
+#define APG_GLYPH_H    1
+
+#include "owntypes.h"
+
+struct sym
+{
+    char   ch;
+    USHORT type;
+};
+
+static struct sym smbl[94] = 
 {
  {'a', S_SL}, {'b', S_SL}, {'c', S_SL}, {'d', S_SL}, {'e', S_SL}, {'f', S_SL},
  {'g', S_SL}, {'h', S_SL}, {'i', S_SL}, {'j', S_SL}, {'k', S_SL}, {'l', S_SL},
@@ -48,4 +58,7 @@ struct sym smbl[94] =
  {123, S_SS}, {124, S_SS}, {125, S_SS}, {126, S_SS}
 };
 
-#endif /* APG_SMBL_H */
+int is_restricted_symbol    (char symbol);
+int gen_rand_symbol         (char *symbol, unsigned int mode);
+
+#endif /* APG_GLYPH_H */

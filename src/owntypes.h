@@ -13,7 +13,7 @@
 **       documentation and/or other materials provided with the distribution. 
 **     3.The name of the author may not be used to endorse or promote products
 **       derived from this software without specific prior written permission. 
-** 		  
+**        
 ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR  ``AS IS'' AND ANY EXPRESS
 ** OR IMPLIED WARRANTIES, INCLUDING,  BUT NOT LIMITED TO, THE IMPLIED
 ** WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,16 +28,22 @@
 */
 
 #ifndef APG_OWN_TYPES_H
-#define APG_OWN_TYPES_H	1
+#define APG_OWN_TYPES_H 1
 
-typedef unsigned int	      UINT;
-typedef unsigned short	      USHORT;
-typedef short int	      SHORT;
-typedef int   		      boolean;
+typedef unsigned int          UINT;
+typedef unsigned short        USHORT;
+typedef short int             SHORT;
+typedef int                   boolean;
 typedef unsigned long int     UINT32;
 
-#define TRUE	1
-#define FALSE	0
+#define TRUE    1
+#define FALSE   0
+
+#define S_NB    0x01 /* Numeric */
+#define S_SS    0x02 /* Special */
+#define S_CL    0x04 /* Capital */
+#define S_SL    0x08 /* Small   */
+#define S_RS    0x10 /* Restricted Symbol*/
 
 #define APG_MAX_PASSWORD_LENGTH 255
 

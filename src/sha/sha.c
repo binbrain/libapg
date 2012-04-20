@@ -1,10 +1,10 @@
 /***************************************************************************/
-/* sha.c								   */
-/*									   */
-/* Public domain SHA-1 implementation.					   */
-/*									   */
-/* Taken from the SHA implementation by Peter C. Gutmann of 9/2/1992	   */
-/* and modified by Carl Ellison to be SHA-1.				   */
+/* sha.c                                                                   */
+/*                                                                         */
+/* Public domain SHA-1 implementation.                                     */
+/*                                                                         */
+/* Taken from the SHA implementation by Peter C. Gutmann of 9/2/1992       */
+/* and modified by Carl Ellison to be SHA-1.                               */
 /***************************************************************************/
 
 /*
@@ -39,13 +39,13 @@
 
 /* 32-bit rotate - kludged with shifts */
 
-typedef unsigned long UL ;	/* to save space */
+typedef unsigned long UL ;  /* to save space */
 
 #define S(n,X)  ( ( ((UL)X) << n ) | ( ((UL)X) >> ( 32 - n ) ) )
 
 /* The initial expanding function */
 
-#define expand(count)   W[ count ] = S(1,(W[ count - 3 ] ^ W[ count - 8 ] ^ W[ count - 14 ] ^ W[ count - 16 ]))	/* to make this SHA-1 */
+#define expand(count)   W[ count ] = S(1,(W[ count - 3 ] ^ W[ count - 8 ] ^ W[ count - 14 ] ^ W[ count - 16 ])) /* to make this SHA-1 */
 
 /* The four SHA sub-rounds */
 
@@ -95,9 +95,9 @@ LONG h0, h1, h2, h3, h4;
 LONG A, B, C, D, E;
 
 /***************************************************************************/
-/* apg_shaInit								   */
-/*									   */
-/* Initialize the SHA values 						   */
+/* apg_shaInit                                 */
+/*                                     */
+/* Initialize the SHA values                           */
 /***************************************************************************/
 
 void apg_shaInit( apg_SHA_INFO *shaInfo )
@@ -111,13 +111,13 @@ void apg_shaInit( apg_SHA_INFO *shaInfo )
 
   /* Initialise bit count */
   shaInfo->countLo = shaInfo->countHi = 0L;
-  shaInfo->slop = 0 ;		/* no data saved yet in data[] */
+  shaInfo->slop = 0 ;       /* no data saved yet in data[] */
 } /* apg_shaInit */
 
 /***************************************************************************/
-/* shaTransform								   */
-/*									   */
-/* Perform the SHA transformation over one input block.			   */
+/* shaTransform                                */
+/*                                     */
+/* Perform the SHA transformation over one input block.            */
 /***************************************************************************/
 
 static void shaTransform( apg_SHA_INFO *shaInfo )
@@ -184,13 +184,13 @@ static void shaTransform( apg_SHA_INFO *shaInfo )
 #ifdef APG_LITTLE_ENDIAN
 
 /***************************************************************************/
-/* byteReverse								   */
-/*									   */
+/* byteReverse                                 */
+/*                                     */
 /* When run on a little-endian CPU we need to perform byte reversal on an  */
-/* array of longwords.  It is possible to make the code endianness-	   */
-/* independant by fiddling around with data at the byte level, but this	   */
+/* array of longwords.  It is possible to make the code endianness-    */
+/* independant by fiddling around with data at the byte level, but this    */
 /* makes for very slow code, so we rely on the user to sort out endianness */
-/* at compile time.							   */
+/* at compile time.                            */
 /***************************************************************************/
 
 static void byteReverse( LONG *buffer, int byteCount )
@@ -208,11 +208,11 @@ static void byteReverse( LONG *buffer, int byteCount )
 #endif /* APG_LITTLE_ENDIAN */
 
 /***************************************************************************/
-/* apg_shaUpdate								   */
-/*									   */
-/* Update SHA for a block of data.					   */
-/* Use any data already in the SHA_INFO structure and leave any partial	   */
-/* data block there.							   */
+/* apg_shaUpdate                                   */
+/*                                     */
+/* Update SHA for a block of data.                     */
+/* Use any data already in the SHA_INFO structure and leave any partial    */
+/* data block there.                               */
 /***************************************************************************/
 
 void apg_shaUpdate( apg_SHA_INFO *shaInfo, BYTE *buffer, int count )
@@ -232,23 +232,23 @@ void apg_shaUpdate( apg_SHA_INFO *shaInfo, BYTE *buffer, int count )
     {
       db[ shaInfo->slop++ ] = *(buffer++) ;
       if (shaInfo->slop == SHA_BLOCKSIZE)
-	{ /* transform this one block */
+    { /* transform this one block */
 #ifdef APG_LITTLE_ENDIAN
-	  byteReverse( shaInfo->data, SHA_BLOCKSIZE );
+      byteReverse( shaInfo->data, SHA_BLOCKSIZE );
 #endif /* APG_LITTLE_ENDIAN */
-	  shaTransform( shaInfo );
-	  shaInfo->slop = 0 ;	/* no slop left */
-	} /* if */
+      shaTransform( shaInfo );
+      shaInfo->slop = 0 ;   /* no slop left */
+    } /* if */
     } /* while */
 } /* apg_shaUpdate */
 
 /***************************************************************************/
-/* apg_shaFinal								   */
-/*									   */
-/* Handle the last piece of data -- if any is left over in the data	   */
-/* buffer -- and append padding and a bit count for the last block	   */
-/* to process.  Having transformed that block, pull the digest out	   */
-/* as a byte array.							   */
+/* apg_shaFinal                                */
+/*                                     */
+/* Handle the last piece of data -- if any is left over in the data    */
+/* buffer -- and append padding and a bit count for the last block     */
+/* to process.  Having transformed that block, pull the digest out     */
+/* as a byte array.                            */
 /***************************************************************************/
 
 void apg_shaFinal( apg_SHA_INFO *shaInfo, BYTE hash[SHA_DIGESTSIZE] )

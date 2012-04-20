@@ -37,23 +37,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#if !defined(WIN32) && !defined(_WIN32) && !defined(__WIN32) && !defined(__WIN32__)
-#include <strings.h> 
-#endif
 #include <time.h>
 #include <sys/types.h>
 #include "pronpass.h"
-#include "randpass.h"
 #include "convert.h"
 #include "errs.h"
 
 struct unit
 {
-    char    unit_code[5];
-    USHORT  flags;
+    char unit_code[5];
+    USHORT flags;
 };
 
-static struct unit  rules[] =
+static struct unit rules[] =
 {   {"a", VOWEL},
     {"b", NO_SPECIAL_RULE},
     {"c", NO_SPECIAL_RULE},
@@ -1271,7 +1267,6 @@ gen_pron_pass (char *word, char *hyphenated_word, USHORT minlen,
 {
 
     int     pwlen;
-    printf("\nin gen_pron_pass\n");
 
  /* 
   * Check for minlen>maxlen.  This is an error.
@@ -1295,7 +1290,6 @@ gen_pron_pass (char *word, char *hyphenated_word, USHORT minlen,
   * Find password.
   */
     pwlen = gen_word (word, hyphenated_word, get_random (minlen, maxlen), pass_mode);
-    printf("made it to end");
     return (pwlen);
 }
 
@@ -1356,7 +1350,6 @@ gen_word (char *word, char *hyphenated_word, USHORT pwlen, unsigned int pass_mod
         (new_syllable   = (char *) calloc (sizeof (USHORT), pwlen+1))  ==NULL ||
         (syllable_for_hyph = (char *) calloc (sizeof(char), 20))==NULL)
         return(-1);
-    printf("new syllable in gen_word %s\n", new_syllable);
 
     /*
      * Find syllables until the entire word is constructed.
@@ -1367,7 +1360,6 @@ gen_word (char *word, char *hyphenated_word, USHORT pwlen, unsigned int pass_mod
         * Get the syllable and find its length.
         */
         (void) gen_syllable (new_syllable, pwlen - word_length, syllable_units, &syllable_size);
-        printf("syllable returned from gen_syllable %s\n", new_syllable);
         syllable_length = strlen (new_syllable);
      
         /*
@@ -1401,18 +1393,15 @@ gen_word (char *word, char *hyphenated_word, USHORT pwlen, unsigned int pass_mod
                 dsd = randint(2);
                 if ( ((pass_mode & S_NB) > 0) && (syllable_length == 1) && dsd == 0)
                 {
-                    printf("going to numerize"); 
                     numerize(new_syllable);
                     ch_flag = TRUE;
                 }
                 if ( ((pass_mode & S_SS) > 0) && (syllable_length == 1) && (dsd == 1))
                 {
-                    printf("going to specialize");
                     specialize(new_syllable);
                     ch_flag = TRUE;
                 }
                 if (((pass_mode & S_CL) > 0) && (ch_flag != TRUE)) {
-                    printf("going to capitalize");
                     capitalize(new_syllable);
                 }
                 ch_flag = FALSE;
@@ -1420,7 +1409,6 @@ gen_word (char *word, char *hyphenated_word, USHORT pwlen, unsigned int pass_mod
 
                 if (syllable_length == 1)
                 {
-                    printf("syllable len 1, whats does this all mean?");
                     symb2name(new_syllable, syllable_for_hyph);
                     (void) strcpy (hyphenated_word, syllable_for_hyph);
                 }
@@ -1477,7 +1465,6 @@ gen_word (char *word, char *hyphenated_word, USHORT pwlen, unsigned int pass_mod
         tries++;
         if (tries > MAX_RETRIES)
         {
-            printf("exceeded max tries, starting from scratch");
             word_length = 0;
             word_size = 0;
             tries = 0;
@@ -1687,7 +1674,6 @@ gen_syllable (char *syllable, USHORT pwlen, USHORT *units_in_syllable,
     static  USHORT saved_unit;
     static  USHORT saved_pair[2];
 
-    printf("passed syllable %s", syllable);
 
     /*
      * This is needed if the saved_unit is tries and the syllable then
@@ -1708,7 +1694,6 @@ gen_syllable (char *syllable, USHORT pwlen, USHORT *units_in_syllable,
      tries = 0;
      saved_unit = hold_saved_unit;
      (void) strcpy (syllable, "");
-     printf("syllable after strcpy %s", syllable);
      vowel_count = 0;
      current_unit = 0;
      length_left = (short int) pwlen;
